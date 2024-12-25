@@ -1,0 +1,71 @@
+{
+  "name": "ts-blank-space-lite",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.15.1",
+  "description": "Fork of bloomberg/ts-blank-space to external typescript",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "ntnyq",
+    "email": "ntnyq13@gmail.com"
+  },
+  "homepage": "https://github.com/ntnyq/ts-blank-space-lite#readme",
+  "repository": "ntnyq/ts-blank-space-lite",
+  "bugs": {
+    "url": "https://github.com/ntnyq/ts-blank-space-lite/issues"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch src",
+    "lint": "eslint .",
+    "prepare": "husky",
+    "prepublishOnly": "pnpm run build",
+    "release": "run-s release:check release:publish",
+    "release:check": "run-s lint typecheck test",
+    "release:publish": "bumpp && pnpm publish",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@ntnyq/eslint-config": "^3.10.2",
+    "@ntnyq/prettier-config": "^1.22.0",
+    "@types/node": "^22.10.2",
+    "bumpp": "^9.9.2",
+    "eslint": "^9.17.0",
+    "husky": "^9.1.7",
+    "nano-staged": "^0.8.0",
+    "npm-run-all2": "^7.0.2",
+    "prettier": "^3.4.2",
+    "tinyglobby": "^0.2.10",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.0-beta.3"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "nano-staged": {
+    "*.{js,ts,mjs,cjs,json,md,yml,yaml}": "eslint --fix"
+  }
+}
