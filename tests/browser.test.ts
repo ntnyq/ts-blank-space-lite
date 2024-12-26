@@ -3,7 +3,7 @@ import { createRequire } from 'node:module'
 import { globSync } from 'tinyglobby'
 import { describe, expect, it } from 'vitest'
 import { resolve } from '../scripts/utils'
-import { createTSBlankSpace } from '../src'
+import { createTSBlankSpace } from '../src/browser'
 
 const fixtures = globSync('*.ts', {
   onlyFiles: true,
@@ -25,22 +25,12 @@ async function readFixture(fixture: string) {
   return content
 }
 
-describe('default', () => {
-  it.each(fixtures)('default - %s', async fixturePath => {
-    const { tsBlankSpace } = await createTSBlankSpace()
-
-    await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/node/default.${fixturePath}.js`,
-    )
-  })
-})
-
 describe('tsPath', () => {
   it.each(fixtures)('require.resolve - %s', async fixturePath => {
     const { tsBlankSpace } = await createTSBlankSpace(require.resolve('typescript'))
 
     await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/node/require.resolve.${fixturePath}.js`,
+      `__snapshots__/browser/require.resolve.${fixturePath}.js`,
     )
   })
 
@@ -50,7 +40,7 @@ describe('tsPath', () => {
     )
 
     await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/node/path.${fixturePath}.js`,
+      `__snapshots__/browser/path.${fixturePath}.js`,
     )
   })
 })
@@ -61,7 +51,7 @@ describe('tsLib', () => {
     const { tsBlankSpace } = await createTSBlankSpace(tsLib)
 
     await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/node/typescript.${fixturePath}.js`,
+      `__snapshots__/browser/typescript.${fixturePath}.js`,
     )
   })
 })
