@@ -57,7 +57,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@ntnyq/eslint-config": "^3.10.2",
+    "@ntnyq/eslint-config": "^3.10.3",
     "@ntnyq/prettier-config": "^1.22.0",
     "@types/node": "^22.10.2",
     "bumpp": "^9.9.2",

@@ -2,6 +2,7 @@
 // Distributed under the terms of the Apache 2.0 license.
 
 import BlankString from './blank-string'
+import { interopDefault } from './utils'
 import type ts from 'typescript'
 
 export type TSLib = typeof import('typescript')
@@ -24,8 +25,9 @@ export type TSLib = typeof import('typescript')
  * ```
  */
 export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
-  const tslib: TSLib =
-    typeof tsLibOrTsPath === 'string' ? await import(tsLibOrTsPath) : tsLibOrTsPath
+  const tslib = await interopDefault<TSLib>(
+    typeof tsLibOrTsPath === 'string' ? await import(tsLibOrTsPath) : tsLibOrTsPath,
+  )
 
   if (!tslib.version) {
     throw new Error('Lib typescript can not be resolved')
