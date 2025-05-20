@@ -2,7 +2,7 @@
   "name": "ts-blank-space-lite",
   "type": "module",
   "version": "0.0.3",
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@10.11.0",
   "description": "Fork of bloomberg/ts-blank-space to external typescript",
   "license": "Apache-2.0",
   "author": {
@@ -17,65 +17,52 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./browser": {
-      "import": {
-        "types": "./dist/browser.d.ts",
-        "default": "./dist/browser.js"
-      },
-      "require": {
-        "types": "./dist/browser.d.cts",
-        "default": "./dist/browser.cjs"
-      }
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.js"
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch src",
-    "lint": "eslint .",
+    "build": "tsdown",
+    "dev": "tsdown --watch src",
+    "lint": "eslint",
     "prepare": "husky",
     "prepublishOnly": "pnpm run build",
-    "release": "run-s release:check release:publish",
+    "release": "run-s release:check release:version release:publish",
     "release:check": "run-s lint typecheck test",
-    "release:publish": "bumpp && pnpm publish",
+    "release:publish": "pnpm publish",
+    "release:version": "bumpp",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@ntnyq/eslint-config": "^3.10.3",
-    "@ntnyq/prettier-config": "^1.22.0",
-    "@types/node": "^22.10.2",
-    "bumpp": "^9.9.2",
-    "eslint": "^9.17.0",
+    "@ntnyq/eslint-config": "^4.3.0",
+    "@ntnyq/prettier-config": "^2.1.0",
+    "@types/node": "^22.15.19",
+    "bumpp": "^10.1.1",
+    "eslint": "^9.27.0",
     "husky": "^9.1.7",
     "nano-staged": "^0.8.0",
-    "npm-run-all2": "^7.0.2",
-    "prettier": "^3.4.2",
-    "tinyglobby": "^0.2.10",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "vitest": "^3.0.0-beta.3"
+    "npm-run-all2": "^8.0.2",
+    "prettier": "^3.5.3",
+    "tinyglobby": "^0.2.13",
+    "tsdown": "^0.11.12",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.11.0"
   },
   "nano-staged": {
-    "*.{js,ts,mjs,cjs,json,md,yml,yaml}": "eslint --fix"
+    "*.{js,ts,mjs,cjs,md,yml,yaml,json}": "eslint --fix"
   }
 }

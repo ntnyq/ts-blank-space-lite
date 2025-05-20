@@ -1,4 +1,9 @@
 packages:
-  - packages/*
-  - playground
-  - examples/*
+  - .
+
+overrides:
+  esbuild: ^0.25.4
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver

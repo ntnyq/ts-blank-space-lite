@@ -27,9 +27,13 @@ async function readFixture(fixture: string) {
 
 describe('tsPath', () => {
   it.each(fixtures)('require.resolve - %s', async fixturePath => {
-    const { tsBlankSpace } = await createTSBlankSpace(require.resolve('typescript'))
+    const { tsBlankSpace } = await createTSBlankSpace(
+      require.resolve('typescript'),
+    )
 
-    await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
+    await expect(
+      tsBlankSpace(await readFixture(fixturePath)),
+    ).toMatchFileSnapshot(
       `__snapshots__/browser/require.resolve.${fixturePath}.js`,
     )
   })
@@ -39,9 +43,9 @@ describe('tsPath', () => {
       resolve('node_modules/typescript/lib/typescript.js'),
     )
 
-    await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/browser/path.${fixturePath}.js`,
-    )
+    await expect(
+      tsBlankSpace(await readFixture(fixturePath)),
+    ).toMatchFileSnapshot(`__snapshots__/browser/path.${fixturePath}.js`)
   })
 })
 
@@ -50,8 +54,8 @@ describe('tsLib', () => {
     const tsLib = await import('typescript')
     const { tsBlankSpace } = await createTSBlankSpace(tsLib)
 
-    await expect(tsBlankSpace(await readFixture(fixturePath))).toMatchFileSnapshot(
-      `__snapshots__/browser/typescript.${fixturePath}.js`,
-    )
+    await expect(
+      tsBlankSpace(await readFixture(fixturePath)),
+    ).toMatchFileSnapshot(`__snapshots__/browser/typescript.${fixturePath}.js`)
   })
 })

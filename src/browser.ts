@@ -26,7 +26,9 @@ export type TSLib = typeof import('typescript')
  */
 export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   const tslib = await interopDefault<TSLib>(
-    typeof tsLibOrTsPath === 'string' ? await import(tsLibOrTsPath) : tsLibOrTsPath,
+    typeof tsLibOrTsPath === 'string'
+      ? await import(tsLibOrTsPath)
+      : tsLibOrTsPath,
   )
 
   if (!tslib.version) {
@@ -68,7 +70,11 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
 
   function visitUnknownNodeArray(nodes: ts.NodeArray<ts.Node>): VisitResult {
     if (nodes.length === 0) return VISITED_JS
-    return visitNodeArray(nodes, tslib.isStatement(nodes[0]), /* isFunctionBody: */ false)
+    return visitNodeArray(
+      nodes,
+      tslib.isStatement(nodes[0]),
+      /* isFunctionBody: */ false,
+    )
   }
 
   function visitNodeArray(
@@ -169,7 +175,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   /**
    * `new Set<string>()` | `foo<string>()`
    */
-  function visitCallOrNewExpression(node: ts.NewExpression | ts.CallExpression): VisitResult {
+  function visitCallOrNewExpression(
+    node: ts.NewExpression | ts.CallExpression,
+  ): VisitResult {
     visitor(node.expression)
     if (node.typeArguments) {
       blankGenerics(node, node.typeArguments, /*startWithParen*/ false)
@@ -244,14 +252,20 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
         }
       }
     }
-    visitNodeArray(node.members, /* isStatementLike: */ true, /* isFunctionBody: */ false)
+    visitNodeArray(
+      node.members,
+      /* isStatementLike: */ true,
+      /* isFunctionBody: */ false,
+    )
     return VISITED_JS
   }
 
   /**
    * Exp<T>
    */
-  function visitExpressionWithTypeArguments(node: ts.ExpressionWithTypeArguments): VisitResult {
+  function visitExpressionWithTypeArguments(
+    node: ts.ExpressionWithTypeArguments,
+  ): VisitResult {
     visitor(node.expression)
     if (node.typeArguments) {
       blankGenerics(node, node.typeArguments, /*startWithParen*/ false)
@@ -268,7 +282,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     SK.PublicKeyword,
     SK.ReadonlyKeyword,
   ] as const
-  const classElementModifiersToRemove = new Set(classElementModifiersToRemoveArray)
+  const classElementModifiersToRemove = new Set(
+    classElementModifiersToRemoveArray,
+  )
 
   function isRemovedModifier(
     kind: ts.SyntaxKind,
@@ -276,7 +292,10 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     return classElementModifiersToRemove.has(kind as never)
   }
 
-  function visitModifiers(modifiers: ts.NodeArray<ts.ModifierLike>, addSemi: boolean): void {
+  function visitModifiers(
+    modifiers: ts.NodeArray<ts.ModifierLike>,
+    addSemi: boolean,
+  ): void {
     for (const [i, modifier] of modifiers.entries()) {
       const kind = modifier.kind
       if (isRemovedModifier(kind)) {
@@ -311,7 +330,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     }
   }
 
-  function isAsync(modifiers: ts.NodeArray<ts.ModifierLike> | undefined): boolean {
+  function isAsync(
+    modifiers: ts.NodeArray<ts.ModifierLike> | undefined,
+  ): boolean {
     if (!modifiers) return false
     for (const modifier of modifiers) {
       if (modifier.kind === SK.AsyncKeyword) return true
@@ -328,7 +349,10 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
         blankStatement(node)
         return VISIT_BLANKED
       }
-      visitModifiers(node.modifiers, /* addSemi */ node.name.kind === SK.ComputedPropertyName)
+      visitModifiers(
+        node.modifiers,
+        /* addSemi */ node.name.kind === SK.ComputedPropertyName,
+      )
     }
     node.exclamationToken && blankExact(node.exclamationToken)
     node.questionToken && blankExact(node.questionToken)
@@ -354,13 +378,15 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   /**
    * `exp satisfies T, exp as T`
    */
-  function visitTypeAssertion(node: ts.SatisfiesExpression | ts.AsExpression): VisitResult {
+  function visitTypeAssertion(
+    node: ts.SatisfiesExpression | ts.AsExpression,
+  ): VisitResult {
     const r = visitor(node.expression)
     const nodeEnd = node.end
     if (
-      parentStatement &&
-      nodeEnd === parentStatement.end &&
-      src.codePointAt(nodeEnd) !== 59 /* ; */
+      parentStatement
+      && nodeEnd === parentStatement.end
+      && src.codePointAt(nodeEnd) !== 59 /* ; */
     ) {
       str.blankButStartWithSemi(node.expression.end, nodeEnd)
     } else {
@@ -416,7 +442,8 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     let moveOpenParen = false
     if (node.typeParameters && node.typeParameters.length) {
       moveOpenParen =
-        isAsync(node.modifiers) && spansLines(node.typeParameters.pos, node.typeParameters.end)
+        isAsync(node.modifiers)
+        && spansLines(node.typeParameters.pos, node.typeParameters.end)
       blankGenerics(node, node.typeParameters, moveOpenParen)
     }
 
@@ -451,8 +478,11 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     const isArrow = kind === SK.ArrowFunction
     if (returnType) {
       if (
-        !isArrow ||
-        !spansLines(node.parameters.end, (node as ts.ArrowFunction).equalsGreaterThanToken.pos)
+        !isArrow
+        || !spansLines(
+          node.parameters.end,
+          (node as ts.ArrowFunction).equalsGreaterThanToken.pos,
+        )
       ) {
         blankTypeNode(returnType)
       } else {
@@ -534,7 +564,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     return VISITED_JS
   }
 
-  function visitEnumOrModule(node: ts.EnumDeclaration | ts.ModuleDeclaration): VisitResult {
+  function visitEnumOrModule(
+    node: ts.EnumDeclaration | ts.ModuleDeclaration,
+  ): VisitResult {
     if (node.modifiers && modifiersContainsDeclare(node.modifiers)) {
       blankStatement(node)
       return VISIT_BLANKED
@@ -544,7 +576,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     }
   }
 
-  function modifiersContainsDeclare(modifiers: ts.NodeArray<ts.ModifierLike>): boolean {
+  function modifiersContainsDeclare(
+    modifiers: ts.NodeArray<ts.ModifierLike>,
+  ): boolean {
     for (const modifier of modifiers) {
       if (modifier.kind === SK.DeclareKeyword) {
         return true
@@ -553,10 +587,15 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
     return false
   }
 
-  function modifiersContainsAbstractOrDeclare(modifiers: ts.NodeArray<ts.ModifierLike>): boolean {
+  function modifiersContainsAbstractOrDeclare(
+    modifiers: ts.NodeArray<ts.ModifierLike>,
+  ): boolean {
     for (const modifier of modifiers) {
       const modifierKind = modifier.kind
-      if (modifierKind === SK.AbstractKeyword || modifierKind === SK.DeclareKeyword) {
+      if (
+        modifierKind === SK.AbstractKeyword
+        || modifierKind === SK.DeclareKeyword
+      ) {
         return true
       }
     }
@@ -622,13 +661,21 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   /**
    * `<T1, T2>`
    */
-  function blankGenerics(node: ts.Node, arr: ts.NodeArray<ts.Node>, startWithParen: boolean): void {
+  function blankGenerics(
+    node: ts.Node,
+    arr: ts.NodeArray<ts.Node>,
+    startWithParen: boolean,
+  ): void {
     const start = arr.pos - 1
     const end = scanRange(arr.end, node.end, getGreaterThanToken)
-    startWithParen ? str.blankButStartWithOpenParen(start, end) : str.blank(start, end)
+    startWithParen
+      ? str.blankButStartWithOpenParen(start, end)
+      : str.blank(start, end)
   }
 
-  function getClosingParenthesisPos(node: ts.NodeArray<ts.ParameterDeclaration>): number {
+  function getClosingParenthesisPos(
+    node: ts.NodeArray<ts.ParameterDeclaration>,
+  ): number {
     return scanRange(
       node.length === 0 ? node.pos : node[node.length - 1].end,
       ast.end,
@@ -645,7 +692,10 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
    * @param onErrorArg - callback when unsupported syntax is encountered
    * @returns the resulting JavaScript
    */
-  function blankSourceFile(source: ts.SourceFile, onErrorArg?: ErrorCb): string {
+  function blankSourceFile(
+    source: ts.SourceFile,
+    onErrorArg?: ErrorCb,
+  ): string {
     try {
       const input = source.getFullText(source)
       src = input
@@ -654,7 +704,11 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
       scanner.setText(input)
       ast = source
 
-      visitNodeArray(ast.statements, /* isStatementLike: */ true, /* isFunctionBody: */ false)
+      visitNodeArray(
+        ast.statements,
+        /* isStatementLike: */ true,
+        /* isFunctionBody: */ false,
+      )
 
       return str.toString()
     } finally {

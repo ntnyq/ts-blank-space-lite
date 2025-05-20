@@ -37,7 +37,14 @@ export default class BlankString {
   }
 
   blankButEndWithCloseParen(start: number, end: number): void {
-    this.__ranges.push(0, start, end - 1, FLAG_REPLACE_WITH_CLOSE_PAREN, end - 1, end)
+    this.__ranges.push(
+      0,
+      start,
+      end - 1,
+      FLAG_REPLACE_WITH_CLOSE_PAREN,
+      end - 1,
+      end,
+    )
   }
 
   blankButStartWithSemi(start: number, end: number): void {

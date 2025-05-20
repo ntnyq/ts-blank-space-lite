@@ -21,6 +21,8 @@ const require = createRequire(import.meta.url)
  * // => `const foo         = 'foo'`
  * ```
  */
-export function createTSBlankSpace(tsLibOrTsPath: TSLib | string = require.resolve('typescript')) {
+export function createTSBlankSpace(
+  tsLibOrTsPath: TSLib | string = require.resolve('typescript'),
+) {
   return _createTSBlankSpace(tsLibOrTsPath)
 }

@@ -20,15 +20,15 @@ Changes in this fork:
 
 ## Install
 
-```bash
+```shell
 npm install ts-blank-space-lite
 ```
 
-```bash
+```shell
 yarn add ts-blank-space-lite
 ```
 
-```bash
+```shell
 pnpm add ts-blank-space-lite
 ```
 
