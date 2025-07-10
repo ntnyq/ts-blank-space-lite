@@ -2,7 +2,7 @@
   "name": "ts-blank-space-lite",
   "type": "module",
   "version": "0.0.3",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.13.1",
   "description": "Fork of bloomberg/ts-blank-space to external typescript",
   "license": "Apache-2.0",
   "author": {
@@ -45,19 +45,19 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@ntnyq/eslint-config": "^4.3.0",
-    "@ntnyq/prettier-config": "^2.1.0",
-    "@types/node": "^22.15.19",
-    "bumpp": "^10.1.1",
-    "eslint": "^9.27.0",
+    "@ntnyq/eslint-config": "^5.0.0",
+    "@ntnyq/prettier-config": "^3.0.1",
+    "@types/node": "^24.0.12",
+    "bumpp": "^10.2.0",
+    "eslint": "^9.30.1",
     "husky": "^9.1.7",
     "nano-staged": "^0.8.0",
-    "npm-run-all2": "^8.0.2",
-    "prettier": "^3.5.3",
-    "tinyglobby": "^0.2.13",
-    "tsdown": "^0.11.12",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "^3.6.2",
+    "tinyglobby": "^0.2.14",
+    "tsdown": "^0.12.9",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.11.0"

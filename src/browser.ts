@@ -69,7 +69,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   let parentStatement: ts.Node | undefined
 
   function visitUnknownNodeArray(nodes: ts.NodeArray<ts.Node>): VisitResult {
-    if (nodes.length === 0) return VISITED_JS
+    if (nodes.length === 0) {
+      return VISITED_JS
+    }
     return visitNodeArray(
       nodes,
       tslib.isStatement(nodes[0]),
@@ -120,7 +122,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
 
   function visitor(node: ts.Node): VisitResult {
     const r = innerVisitor(node, node.kind)
-    if (r === VISITED_JS) seenJS = true
+    if (r === VISITED_JS) {
+      seenJS = true
+    }
     return r
   }
 
@@ -312,7 +316,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
       }
 
       // at runtime skip the remaining code, its purpose is a compile-time exhaustive check
-      if (true as false) continue
+      if (true as false) {
+        continue
+      }
 
       switch (kind) {
         case SK.ConstKeyword:
@@ -333,9 +339,13 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
   function isAsync(
     modifiers: ts.NodeArray<ts.ModifierLike> | undefined,
   ): boolean {
-    if (!modifiers) return false
+    if (!modifiers) {
+      return false
+    }
     for (const modifier of modifiers) {
-      if (modifier.kind === SK.AsyncKeyword) return true
+      if (modifier.kind === SK.AsyncKeyword) {
+        return true
+      }
     }
     return false
   }
@@ -507,7 +517,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
 
   function spansLines(a: number, b: number): boolean {
     for (let i = a; i < b; i++) {
-      if (src.codePointAt(i) === 10 /* \n */) return true
+      if (src.codePointAt(i) === 10 /* \n */) {
+        return true
+      }
     }
     return false
   }
@@ -615,7 +627,9 @@ export async function createTSBlankSpace(tsLibOrTsPath: TSLib | string) {
         start = scanner.getTokenStart()
         first = false
       }
-      if (next === token) break
+      if (next === token) {
+        break
+      }
       if (next === SK.EndOfFileToken) {
         // We should always find the token we are looking for
         // if we don't, return the start of where we started searching from
