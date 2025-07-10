@@ -1,7 +1,7 @@
 {
   "name": "ts-blank-space-lite",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "packageManager": "pnpm@10.13.1",
   "description": "Fork of bloomberg/ts-blank-space to external typescript",
   "license": "Apache-2.0",
